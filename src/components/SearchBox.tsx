@@ -187,15 +187,18 @@ const ChipComponent = () => {
   
 
   return (
+    <div>
+      <h2 style={{ textAlign: "center", marginTop: "20px" }}>Add new user</h2>
     <div
       style={{
-        position: "relative",
-        borderRadius: "4px",
+        position: "absolute",
+        borderRadius: "0px",
         padding: "8px",
-        display: "inline-block",
+        display: "flex",
         borderBottom: "3px solid #82b7df",
       }}
     >
+      
       <div
         style={{
           display: "flex",
@@ -293,7 +296,7 @@ const ChipComponent = () => {
           </ul>
         </div>
       )}
-      
+      </div>
     </div>
   );
 };
