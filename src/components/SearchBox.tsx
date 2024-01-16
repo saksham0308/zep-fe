@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./SearchBox.css";
-
+// type Suggestions = typeof remainingSuggestions[number];
 const ChipComponent = () => {
   const items = [
     "New York",
@@ -9,6 +9,7 @@ const ChipComponent = () => {
     "Telegana",
     "Karnataka",
   ];
+  
 
   const imageUrls: { [key: string]: string } = {
     "New York": "https://picsum.photos/536/354",
@@ -34,10 +35,34 @@ const ChipComponent = () => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [inputPosition, setInputPosition] = useState<{ top: number; left: number } | null>(null);
   const [isSuggestionsVisible, setSuggestionsVisible] = useState(false);
+  type Suggestions = typeof remainingSuggestions[number];
   
 
   
+  function highlightTypedCharacters(item: Suggestions, inputValue: string) {
+    const lowerCaseItem = item.toLowerCase();
+    const normalItem = item.toLowerCase();
+    const lowerCaseInput = inputValue.toLowerCase();
+    let highlightIndex = 0;
 
+    return lowerCaseInput
+      ? lowerCaseItem.split("").map((char, charIndex) => {
+          const matches = char === lowerCaseInput[highlightIndex];
+          if (matches) highlightIndex++;
+          return (
+            <span
+              key={charIndex}
+              style={{
+                fontWeight: matches ? "bold" : "normal",
+                color: matches ? "#000" : "#555",
+              }}
+            >
+              {char}
+            </span>
+          );
+        })
+      : item;
+  }
 
   useEffect(() => {
     
@@ -253,20 +278,25 @@ const ChipComponent = () => {
                   alignItems: "center",
                 }}
               >
+                
                 <img
                   src={imageUrls[item]} // Use the corresponding image URL for each item
                   alt={`Image for ${item}`}
                   className="round-image"
                 />
-                {item}
+                <span>
+      {highlightTypedCharacters(item, inputValue)}
+    </span>
                 <span style={{ marginLeft: "8px", color: "#555" }}>{emailList[item]}</span>
               </li>
             ))}
           </ul>
         </div>
       )}
+      
     </div>
   );
 };
+
 
 export default ChipComponent;
