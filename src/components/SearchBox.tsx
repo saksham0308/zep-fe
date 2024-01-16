@@ -18,6 +18,14 @@ const ChipComponent = () => {
     "Karnataka": "https://picsum.photos/id/15/367/267",
   };
   
+  const emailList: { [key: string]: string } = {
+    "New York": "newyork@example.com",
+    "San Francisco": "sanfrancisco@example.com",
+    "New Delhi": "newdelhi@example.com",
+    "Telegana": "telegana@example.com",
+    "Karnataka": "karnataka@example.com",
+  };
+  
   const [inputValue, setInputValue] = useState("");
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [remainingSuggestions, setRemainingSuggestions] = useState<string[]>(items);
@@ -25,9 +33,14 @@ const ChipComponent = () => {
   const [highlightedItem, setHighlightedItem] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [inputPosition, setInputPosition] = useState<{ top: number; left: number } | null>(null);
+  const [isSuggestionsVisible, setSuggestionsVisible] = useState(false);
+  
+
+  
 
 
   useEffect(() => {
+    
     const handleBackspace = (e: KeyboardEvent) => {
       const inputElement = inputRef.current;
   
@@ -47,6 +60,7 @@ const ChipComponent = () => {
       }
     };
     const handleKeyDown = (e: KeyboardEvent) => {
+      
       // Check for Backspace key even when the suggestion list is not visible
       if (e.key === "Backspace" && inputValue === "") {
         e.preventDefault(); // Prevents navigation back in browser history
@@ -82,18 +96,27 @@ const ChipComponent = () => {
       document.removeEventListener("keydown", handleBackspace);
       document.removeEventListener("keydown", handleKeyDown);
     };
+    
   }, [inputValue, selectedItems, highlightedItem,showSuggestions, remainingSuggestions, highlightedItem,inputValue]);
 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
-
+  
     const filteredSuggestions = remainingSuggestions.filter((item) =>
       item.toLowerCase().includes(value.toLowerCase())
     );
-
+  
     setRemainingSuggestions(filteredSuggestions);
+  
+    // Set the highlighted item if there are suggestions
+    if (filteredSuggestions.length > 0) {
+      setHighlightedItem(filteredSuggestions[0]);
+    }
+  
+    // Always show suggestions when there is input
+    setSuggestionsVisible(value !== "" && filteredSuggestions.length > 0);
   };
 
   const handleInputClick = () => {
@@ -185,7 +208,7 @@ const ChipComponent = () => {
           value={inputValue}
           onChange={handleInputChange}
           onClick={handleInputClick}
-          placeholder={selectedItems.length > 0 ? "" : "Search..."}
+          placeholder= "Add new user..."
           style={{
             flex: "1", /* Allow the input to take up available space */
             minWidth: "100px", /* Set a minimum width for the input */
@@ -194,6 +217,7 @@ const ChipComponent = () => {
             outline: "none",
             width: "100%", /* Set width to 100% to span the full length */
             height: "30px", /* Set a fixed height */
+            padding:"4px"
           }}
         />
       </div>
@@ -203,10 +227,10 @@ const ChipComponent = () => {
           position: "fixed", // Use fixed position for accurate placement
           top: inputPosition ? inputPosition.top : "auto",
           left: inputPosition ? inputPosition.left : "auto",
-          width: "15%",
+          width: "20%",
           maxHeight: "150px",
           overflowY: "auto",
-          background: "#fff",
+          background: "white",
           borderRadius: "4px",
           border: "1px solid #ccc",
           boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
@@ -222,7 +246,7 @@ const ChipComponent = () => {
                   cursor: "pointer",
                   padding: "8px",
                   backgroundColor:
-                  highlightedItem === item ? "#c1e4fe" : "#f4f4f4",
+                  highlightedItem === item ? "#cbd2d7" : "white",
                   borderRadius: "4px",
                   margin: "4px 0",
                   display: "flex",
@@ -235,6 +259,7 @@ const ChipComponent = () => {
                   className="round-image"
                 />
                 {item}
+                <span style={{ marginLeft: "8px", color: "#555" }}>{emailList[item]}</span>
               </li>
             ))}
           </ul>
