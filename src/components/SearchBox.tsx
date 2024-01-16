@@ -47,43 +47,43 @@ const ChipComponent = () => {
       }
     };
     const handleKeyDown = (e: KeyboardEvent) => {
-          if (showSuggestions && remainingSuggestions.length > 0) {
-            if (e.key === "ArrowDown") {
-              e.preventDefault(); // Prevents scrolling the page
-              const currentIndex = highlightedItem ? remainingSuggestions.indexOf(highlightedItem) : -1;
-              const nextIndex = (currentIndex + 1) % remainingSuggestions.length;
-              setHighlightedItem(remainingSuggestions[nextIndex] || null);
-            }
-          }
-        };
+      // Check for Backspace key even when the suggestion list is not visible
+      if (e.key === "Backspace" && inputValue === "") {
+        e.preventDefault(); // Prevents navigation back in browser history
+        const lastChip = selectedItems[selectedItems.length - 1];
   
+        if (lastChip) {
+          handleChipRemove(lastChip);
+          setHighlightedItem(null); // Clear the highlighted item
+        }
+      } else if (showSuggestions && remainingSuggestions.length > 0) {
+        const currentIndex = highlightedItem ? remainingSuggestions.indexOf(highlightedItem) : -1;
+  
+        if (e.key === "ArrowDown") {
+          e.preventDefault(); // Prevents scrolling the page
+          const nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % remainingSuggestions.length;
+          setHighlightedItem(remainingSuggestions[nextIndex]);
+        } else if (e.key === "Enter") {
+          e.preventDefault(); // Prevents form submission or other default behavior
+          if (highlightedItem) {
+            handleItemClick(highlightedItem);
+          }
+        }
+      }
+    };
+    
+    if (showSuggestions && remainingSuggestions.length > 0 && highlightedItem === null) {
+      setHighlightedItem(remainingSuggestions[0]);
+    }
     document.addEventListener("keydown", handleBackspace);
-    // document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
   
     return () => {
       document.removeEventListener("keydown", handleBackspace);
-      // document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [inputValue, selectedItems, highlightedItem,showSuggestions, remainingSuggestions, highlightedItem]);
+  }, [inputValue, selectedItems, highlightedItem,showSuggestions, remainingSuggestions, highlightedItem,inputValue]);
 
-  // useEffect(() => {
-  //   const handleKeyDown = (e: KeyboardEvent) => {
-  //     if (showSuggestions && remainingSuggestions.length > 0) {
-  //       if (e.key === "ArrowDown") {
-  //         e.preventDefault(); // Prevents scrolling the page
-  //         const currentIndex = highlightedItem ? remainingSuggestions.indexOf(highlightedItem) : -1;
-  //         const nextIndex = (currentIndex + 1) % remainingSuggestions.length;
-  //         setHighlightedItem(remainingSuggestions[nextIndex] || null);
-  //       }
-  //     }
-  //   };
-  
-  //   document.addEventListener("keydown", handleKeyDown);
-  
-  //   return () => {
-  //     document.removeEventListener("keydown", handleKeyDown);
-  //   };
-  // }, [showSuggestions, remainingSuggestions, highlightedItem]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
