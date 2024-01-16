@@ -187,15 +187,22 @@ const ChipComponent = () => {
   
 
   return (
-    <div>
-      <h2 style={{ textAlign: "center", marginTop: "20px" }}>Add new user</h2>
+    <div style={{
+      paddingLeft: "30%",
+      paddingRight: "40%",
+
+    }}>
+      <h2 style={{ textAlign: "center", marginTop: "20px", color:"#3b72ca"}}>Pick Users</h2>
     <div
       style={{
-        position: "absolute",
+        // position: "absolute",
         borderRadius: "0px",
-        padding: "8px",
-        display: "flex",
+        // display: "flex",
+        // flexWrap: "wrap",
+        // paddingLeft: "500px",
+        // paddingRight: "500px",
         borderBottom: "3px solid #82b7df",
+        // width: "90%"
       }}
     >
       
@@ -203,8 +210,9 @@ const ChipComponent = () => {
         style={{
           display: "flex",
           flexWrap: "wrap",
-          gap: "8px",
-          paddingLeft: "8px",
+          // gap: "8px",
+          // paddingLeft: "8px",
+          // width: "40%",
         }}
       >
         {selectedItems.map((item, index) => (
