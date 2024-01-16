@@ -1,0 +1,67 @@
+.chip {
+    display: flex;
+    align-items: center;
+    background-color: #f4f4f4;
+    border-radius: 20px;
+    margin: 4px;
+    border-bottom: 2px solid rgb(200, 200, 213);
+  }
+  
+  .chip.highlighted {
+    background-color: #82b7df;
+  }
+  
+  .remove-btn {
+    margin-left: 2px;
+    cursor: pointer;
+    color: rgb(68, 63, 63);
+    border: none;
+    background: none;
+    font-size: 20px;
+  }
+  .round-image {
+    width: 30px; /* Adjust the size as needed */
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 8px; /* Adjust the spacing as needed */
+  }
+  .dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    max-width: 200px; /* Set the maximum width for the dropdown list */
+    width: 100%; /* Ensure it takes 100% width within the maximum width */
+    background: #fff;
+    border-radius: 4px;
+    border: px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    overflow: hidden; /* Hide any content that goes beyond the specified dimensions */
+  }
+  
+  /* Rest of your existing styles for dropdown list items */
+  .dropdown-item {
+    cursor: pointer;
+    padding: 12px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    margin: 0; /* Remove margin between dropdown items */
+    display: flex;
+    align-items: center;
+  }
+  
+  .dropdown-item.highlighted {
+    background-color: #c1e4fe;
+  }
+  .selected-chip {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    background-color: #bec2c5; /* Background color for selected items */
+    border-radius: 20px; /* Rounded corners for selected items */
+    margin: 4px;
+  }
+  .dropdown-item .round-image {
+    margin-right: 12px; /* Adjust margin if needed */
+  }
+  
