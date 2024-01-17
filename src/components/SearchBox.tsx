@@ -248,7 +248,7 @@ const ChipComponent = () => {
           value={inputValue}
           onChange={handleInputChange}
           onClick={handleInputClick}
-          placeholder= "Add new user..."
+          placeholder= "Add new city..."
           style={{
             flex: "1", /* Allow the input to take up available space */
             minWidth: "100px", /* Set a minimum width for the input */
