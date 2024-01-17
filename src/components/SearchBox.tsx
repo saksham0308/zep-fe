@@ -6,8 +6,8 @@ const ChipComponent = () => {
     "New York",
     "San Francisco",
     "New Delhi",
-    "Telegana",
-    "Karnataka",
+    "Jabalpur",
+    "Pune",
   ];
   
 
@@ -15,16 +15,16 @@ const ChipComponent = () => {
     "New York": "https://picsum.photos/536/354",
     "San Francisco": "https://picsum.photos/id/0/367/267",
     "New Delhi": "https://picsum.photos/id/13/367/267",
-    "Telegana": "https://picsum.photos/id/17/367/267",
-    "Karnataka": "https://picsum.photos/id/15/367/267",
+    "Jabalpur": "https://picsum.photos/id/17/367/267",
+    "Pune": "https://picsum.photos/id/15/367/267",
   };
   
   const emailList: { [key: string]: string } = {
     "New York": "newyork@example.com",
     "San Francisco": "sanfrancisco@example.com",
     "New Delhi": "newdelhi@example.com",
-    "Telegana": "telegana@example.com",
-    "Karnataka": "karnataka@example.com",
+    "Jabalpur": "telegana@example.com",
+    "Pune": "karnataka@example.com",
   };
   
   const [inputValue, setInputValue] = useState("");
@@ -196,7 +196,7 @@ const ChipComponent = () => {
       paddingRight: "40%",
 
     }}>
-      <h2 style={{ textAlign: "center", marginTop: "20px", color:"#3b72ca"}}>Pick Users</h2>
+      <h2 style={{ textAlign: "center", marginTop: "20px", color:"#3b72ca"}}>Pick City</h2>
     <div
       style={{
         // position: "absolute",
