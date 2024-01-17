@@ -41,10 +41,9 @@ const ChipComponent = () => {
   
   function highlightTypedCharacters(item: Suggestions, inputValue: string) {
     const lowerCaseItem = item.toLowerCase();
-    const normalItem = item.toLowerCase();
     const lowerCaseInput = inputValue.toLowerCase();
     let highlightIndex = 0;
-
+  
     return lowerCaseInput
       ? lowerCaseItem.split("").map((char, charIndex) => {
           const matches = char === lowerCaseInput[highlightIndex];
@@ -57,44 +56,77 @@ const ChipComponent = () => {
                 color: matches ? "#000" : "#555",
               }}
             >
-              {char}
+              {item[charIndex]}
             </span>
           );
         })
       : item;
   }
+  
+  
 
   useEffect(() => {
+  //   const handleKeyDown = (e: KeyboardEvent) => {
+  //     const inputElement = inputRef.current;
     
-    const handleBackspace = (e: KeyboardEvent) => {
-      const inputElement = inputRef.current;
+  //     if (inputElement && inputElement === document.activeElement) {
+  //       if (e.key === "Backspace" && inputValue === "") {
+  //         e.preventDefault(); // Prevents navigation back in browser history
+    
+  //         if (selectedItems.length > 0) {
+  //           const lastChip = selectedItems[selectedItems.length - 1];
+    
+  //           if (!highlightedItem) {
+  //             // If no chip is highlighted, highlight the last chip
+  //             setHighlightedItem(lastChip);
+  //           } else if (highlightedItem === lastChip) {
+  //             // If the last chip is highlighted, remove it
+  //             handleChipRemove(lastChip);
+  //             setHighlightedItem(null); // Clear the highlighted item
+  //           }
+  //         }
+  //       }
+  //     } else if (showSuggestions && remainingSuggestions.length > 0) {
+  //       const currentIndex = highlightedItem ? remainingSuggestions.indexOf(highlightedItem) : -1;
+    
+  //       if (e.key === "ArrowDown") {
+  //         e.preventDefault(); // Prevents scrolling the page
+  //         const nextIndex = (currentIndex + 1) % remainingSuggestions.length;
+  //         setHighlightedItem(remainingSuggestions[nextIndex]);
+  //       } else if (e.key === "ArrowUp") {
+  //         e.preventDefault(); // Prevents scrolling the page
+  //         const prevIndex = (currentIndex - 1 + remainingSuggestions.length) % remainingSuggestions.length;
+  //         setHighlightedItem(remainingSuggestions[prevIndex]);
+  //       } else if (e.key === "Enter") {
+  //         e.preventDefault(); // Prevents form submission or other default behavior
+  //         if (highlightedItem) {
+  //           handleItemClick(highlightedItem);
+  //         }
+  //       }
+  //     }
+  //   };
   
-      if (inputElement && inputElement === document.activeElement) {
-        if (e.key === "Backspace" && inputValue === "") {
-          const lastChip = selectedItems[selectedItems.length - 1];
-  
-          if (!highlightedItem && lastChip) {
-            // If no chip is highlighted, highlight the last chip
-            setHighlightedItem(lastChip);
-          } else if (highlightedItem === lastChip) {
-            // If the last chip is highlighted, remove it
-            handleChipRemove(lastChip);
-            setHighlightedItem(null); // Clear the highlighted item
-          }
-        }
-      }
-    };
     const handleKeyDown = (e: KeyboardEvent) => {
       
       // Check for Backspace key even when the suggestion list is not visible
       if (e.key === "Backspace" && inputValue === "") {
         e.preventDefault(); // Prevents navigation back in browser history
         const lastChip = selectedItems[selectedItems.length - 1];
-  
-        if (lastChip) {
+       
+        if (selectedItems.length > 0) {
+          const lastChip = selectedItems[selectedItems.length - 1];
+          if (!highlightedItem) {
+                      // If no chip is highlighted, highlight the last chip
+            setHighlightedItem(lastChip);
+          } else if (highlightedItem === lastChip) {            // If the last chip is highlighted, remove it
           handleChipRemove(lastChip);
           setHighlightedItem(null); // Clear the highlighted item
-        }
+            }
+                  }
+        // if (lastChip) {
+        //   handleChipRemove(lastChip);
+        //   setHighlightedItem(null); // Clear the highlighted item
+        // }
       } else if (showSuggestions && remainingSuggestions.length > 0) {
         const currentIndex = highlightedItem ? remainingSuggestions.indexOf(highlightedItem) : -1;
   
@@ -110,39 +142,30 @@ const ChipComponent = () => {
         }
       }
     };
-    
-    if (showSuggestions && remainingSuggestions.length > 0 && highlightedItem === null) {
-      setHighlightedItem(remainingSuggestions[0]);
-    }
-    document.addEventListener("keydown", handleBackspace);
     document.addEventListener("keydown", handleKeyDown);
   
     return () => {
-      document.removeEventListener("keydown", handleBackspace);
       document.removeEventListener("keydown", handleKeyDown);
     };
-    
-  }, [inputValue, selectedItems, highlightedItem,showSuggestions, remainingSuggestions, highlightedItem,inputValue]);
+  
+  }, [inputValue, selectedItems, highlightedItem, showSuggestions, remainingSuggestions]);
 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
   
-    const filteredSuggestions = remainingSuggestions.filter((item) =>
-      item.toLowerCase().includes(value.toLowerCase())
+    const filteredSuggestions = items.filter(
+      (item) =>
+        !selectedItems.includes(item) &&
+        item.toLowerCase().includes(value.toLowerCase())
     );
   
     setRemainingSuggestions(filteredSuggestions);
-  
-    // Set the highlighted item if there are suggestions
-    if (filteredSuggestions.length > 0) {
-      setHighlightedItem(filteredSuggestions[0]);
-    }
-  
-    // Always show suggestions when there is input
-    setSuggestionsVisible(value !== "" && filteredSuggestions.length > 0);
+    setHighlightedItem(filteredSuggestions.length > 0 ? filteredSuggestions[0] : null);
+    setShowSuggestions(true);
   };
+  
 
   const handleInputClick = () => {
     const inputElement = inputRef.current;
@@ -153,15 +176,17 @@ const ChipComponent = () => {
     }
   
     setShowSuggestions(true);
-    setRemainingSuggestions(items.filter((item) => !selectedItems.includes(item)));
+    setRemainingSuggestions(items.filter((item) => !selectedItems.includes(item) && item.toLowerCase().includes(inputValue.toLowerCase())));
+
+
   };
 
   const handleItemClick = (item: string) => {
-    setInputValue("");
-    setSelectedItems([...selectedItems, item]);
-    setShowSuggestions(false);
-    setHighlightedItem(null);
-  };
+  setInputValue("");
+  setSelectedItems([...selectedItems, item]);
+  setHighlightedItem(null);
+  setShowSuggestions(false); // Move this line after setting highlightedItem to null
+};
 
   const handleChipRemove = (item: string) => {
     const updatedItems = selectedItems.filter((selectedItem) => selectedItem !== item);
