@@ -66,6 +66,12 @@ const ChipComponent = () => {
   
 
   useEffect(() => {
+    // e: KeyboardEvent
+    if(inputValue === "")
+    setShowSuggestions(false);
+    // if (e.key === "Backspace" && inputValue === "") {
+
+    // }
   //   const handleKeyDown = (e: KeyboardEvent) => {
   //     const inputElement = inputRef.current;
     
