@@ -66,80 +66,52 @@ const ChipComponent = () => {
   
 
   useEffect(() => {
-    // e: KeyboardEvent
-    if(inputValue === "")
-    setShowSuggestions(false);
-    // if (e.key === "Backspace" && inputValue === "") {
-
-    // }
-  //   const handleKeyDown = (e: KeyboardEvent) => {
-  //     const inputElement = inputRef.current;
     
-  //     if (inputElement && inputElement === document.activeElement) {
-  //       if (e.key === "Backspace" && inputValue === "") {
-  //         e.preventDefault(); // Prevents navigation back in browser history
-    
-  //         if (selectedItems.length > 0) {
-  //           const lastChip = selectedItems[selectedItems.length - 1];
-    
-  //           if (!highlightedItem) {
-  //             // If no chip is highlighted, highlight the last chip
-  //             setHighlightedItem(lastChip);
-  //           } else if (highlightedItem === lastChip) {
-  //             // If the last chip is highlighted, remove it
-  //             handleChipRemove(lastChip);
-  //             setHighlightedItem(null); // Clear the highlighted item
-  //           }
-  //         }
-  //       }
-  //     } else if (showSuggestions && remainingSuggestions.length > 0) {
-  //       const currentIndex = highlightedItem ? remainingSuggestions.indexOf(highlightedItem) : -1;
-    
-  //       if (e.key === "ArrowDown") {
-  //         e.preventDefault(); // Prevents scrolling the page
-  //         const nextIndex = (currentIndex + 1) % remainingSuggestions.length;
-  //         setHighlightedItem(remainingSuggestions[nextIndex]);
-  //       } else if (e.key === "ArrowUp") {
-  //         e.preventDefault(); // Prevents scrolling the page
-  //         const prevIndex = (currentIndex - 1 + remainingSuggestions.length) % remainingSuggestions.length;
-  //         setHighlightedItem(remainingSuggestions[prevIndex]);
-  //       } else if (e.key === "Enter") {
-  //         e.preventDefault(); // Prevents form submission or other default behavior
-  //         if (highlightedItem) {
-  //           handleItemClick(highlightedItem);
-  //         }
-  //       }
-  //     }
-  //   };
   
     const handleKeyDown = (e: KeyboardEvent) => {
-      
       // Check for Backspace key even when the suggestion list is not visible
       if (e.key === "Backspace" && inputValue === "") {
-        e.preventDefault(); // Prevents navigation back in browser history
-        const lastChip = selectedItems[selectedItems.length - 1];
-       
-        if (selectedItems.length > 0) {
-          const lastChip = selectedItems[selectedItems.length - 1];
-          if (!highlightedItem) {
-                      // If no chip is highlighted, highlight the last chip
-            setHighlightedItem(lastChip);
-          } else if (highlightedItem === lastChip) {            // If the last chip is highlighted, remove it
-          handleChipRemove(lastChip);
+        setShowSuggestions(false);
+        const lastChipp = selectedItems[selectedItems.length - 1];
+        if (!highlightedItem) {
+          // If no chip is highlighted, highlight the last chip
+          setHighlightedItem(lastChipp);
+        } else if (highlightedItem === lastChipp) {
+          // If the last chip is highlighted, remove it
+          handleChipRemove(lastChipp);
           setHighlightedItem(null); // Clear the highlighted item
-            }
-                  }
-        // if (lastChip) {
-        //   handleChipRemove(lastChip);
-        //   setHighlightedItem(null); // Clear the highlighted item
-        // }
+        }
+        e.preventDefault(); // Prevents navigation back in browser history
+        return;
       } else if (showSuggestions && remainingSuggestions.length > 0) {
-        const currentIndex = highlightedItem ? remainingSuggestions.indexOf(highlightedItem) : -1;
-  
+        const currentIndex = highlightedItem
+          ? remainingSuggestions.indexOf(highlightedItem)
+          : -1;
+    
         if (e.key === "ArrowDown") {
           e.preventDefault(); // Prevents scrolling the page
           const nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % remainingSuggestions.length;
           setHighlightedItem(remainingSuggestions[nextIndex]);
+    
+          // Scroll the selected suggestion into view
+          const suggestionElement = document.getElementById(`suggestion-${nextIndex}`);
+          suggestionElement?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'start',
+          });
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault(); // Prevents scrolling the page
+          const prevIndex = (currentIndex - 1 + remainingSuggestions.length) % remainingSuggestions.length;
+          setHighlightedItem(remainingSuggestions[prevIndex]);
+    
+          // Scroll the selected suggestion into view
+          const suggestionElement = document.getElementById(`suggestion-${prevIndex}`);
+          suggestionElement?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'start',
+          });
         } else if (e.key === "Enter") {
           e.preventDefault(); // Prevents form submission or other default behavior
           if (highlightedItem) {
@@ -148,6 +120,7 @@ const ChipComponent = () => {
         }
       }
     };
+    
     document.addEventListener("keydown", handleKeyDown);
   
     return () => {
@@ -308,6 +281,7 @@ const ChipComponent = () => {
             {remainingSuggestions.map((item, index) => (
               <li
                 key={index}
+                id={`suggestion-${index}`}
                 onClick={() => handleItemClick(item)}
                 style={{
                   cursor: "pointer",
